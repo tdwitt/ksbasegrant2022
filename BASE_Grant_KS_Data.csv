@@ -1,0 +1,37 @@
+Number,County,City,Organization,Description,Organization Type,Amount,Detail,Project Type,News Article
+1,Allen,NA,Allen County Regional Airport,Infrastructure Buildout for Industrial Development at Allen County Airport,County,2905095,Increase utility capacity,Industrial Park,Yes
+2,Atchison,NA,Atchison Area Economic Development Corporation (AAEDC),Industrial Road Business Park Sign,Economic Development Organization,13500,Signage,Industrial Park,Yes
+3,Barton,Great Bend,"SOFTwarfare, LLC",Trusted Cyber Security Identity Cloud for Kansas Manufacturers,Private,3000000,Data center cloud services,New Business Facility,Yes
+4,Butler,Andover,City of Andover,Northeast Andover Growth Area,City,4500000,Unknown,Multiuse Development,No
+5,Butler,Andover,City of Andover,Founder's Parkway (US 54/400 Backage Road),City,4000000,Unknown,Street for Development,No
+6,Butler,Augusta,City of Augusta and DJ Engineering,Augusta Industrial Parks Utility Modernization & Business Expansion Project,City,4000000,Increase utility capacity ,Broad electric capacity,Yes
+7,Butler,El Dorado,City of El Dorado,El Dorado Water Infrastructure and Industrial Development,City,3000000,Increase utility capacity,Industrial Park,Yes
+8,Doniphan,Elwood,City of Elwood,City of Elwood Potable Water and Sanitary Sewer Extension,City,226000,Increase utility capacity,Broad water and sewer capacity,Yes
+9,Douglas,Lawrence,KU Innovation Park,"KU Innovation Park Phase III, IV, & V Development",University,5000000,Lab space and future planning,Business Incubator,Yes
+10,Ellis,Hays,"Grow Hays, Inc.",Grow Hays Microfactory,Economic Development Organization,2623300,Microfactory for manufacturers,Business Incubator,Yes
+11,Franklin,Ottawa,City of Ottawa,City of Ottawa Proximity Park & North Corridor Improvements,City,5000000,Increate utility capacity,Industrial Park,Yes
+12,Graham,Hill City,City of Hill City,Water System Improvement/Ed Project,City,290178,Increase utility capacity,Broad water and sewer capacity,No
+13,Harper,NA,Harper County Community Foundation,HP CO Growth Initiative,Community Foundation,3000000,Unknown,Unknown,No
+14,Johnson,Olathe,City of Olathe,K-10 and Ridgeview Road Entertainment District,City,4000000,Unknown,Multiuse Development,Yes
+15,Johnson,Olathe,City of Olathe Public Works,Southwest Olathe Commerce,City,2944416,Unknown,Unknown,Yes
+16,Johnson,Spring Hill,City of Spring Hill,Webster Road Extension / Wiswell Farms,City,2700000,Unknown,Unknown,Yes
+17,Johnson,Overland Park,Curtin Property Company,Brookridge Redevelopment,Private,10000000,Unknown,Multiuse Development,Yes
+18,Johnson,NA,EnterpriseKC,Establishing KS as a Cybersecurity Center of Excellence,Economic Development Organization,7499773,Unknown,Workforce and Business Development,Yes
+19,Johnson,De Soto,Flint Development,Flint Commerce Center,Private,6000000,Unknown,Multiuse Development,Yes
+20,Kiowa,Mullinville,Mullinville Community Foundation,Mullinville Business Incubator,Community Foundation,425398,Building improvements,Business Incubator,Yes
+21,Labette,Parsons,Great Plains Development Authority/Great Plains Industrial Park,Great Plains Industrial Park Rail Improvement Project,Economic Development Organization,779211,Rail Improvements,Industrial Park,Yes
+22,McPherson,Moundridge,City of Moundridge,Grow Moundridge Project,City of Moundridge,409914,Increase utility capacity,Multiuse Development,Yes
+23,Neosho,Chanute,Chanute Regional Development Authority,Chanute Business Expansion & Supporting Residential Development Project,Economic Development Organization,500000,Unknown,Multiuse Development,Yes
+24,Norton,Norton,Norton County Community Foundation,Heaton Building Infrastructure and Modernization,Community Foundation,115428,Building improvements,Business Incubator,Yes
+25,Phillips,Phillipsburg,"Prairie Land Electric Cooperative, Inc.",Prairie Land - Summit Regional Electrical Infrastructure Project,Private,1130490,Electrical improvements for ethanol plant,Business Expansion,Yes
+26,Pottawatomie,Manhattan,"Radiation Detection Technologies, Inc.",RDT Bringing Semiconductor Foundry Production Capabilities to Kansas,Private,2905200,Unknown,Business Expansion,No
+27,Sedgwick,Wichita,City of Wichita & EPC Real Estate,Wichita Riverfront Improvements,City,5000000,Riverfront improvements hotel office space skybridge,Downtown Development,Yes
+28,Shawnee,Topeka,Friends of the Free State Capitol,Preservation/Conservation - Free State Capitol and Constitution Hall,Non profit,3750000,Building improvements,Museum ,Yes
+29,Shawnee,Topeka,"Friends of the Topeka Zoo, Inc.",City of Topeka/Gage Park Development,Non profit,3000000,Infrastructure Improvements,Zoo,Yes
+30,Shawnee,Topeka,Metropolitan Topeka Airport Authority,Site Prep for NIAR - Topeka Regional Airport,City,1000000,Unknown,Airport,No
+31,Stafford,St John,Port Authority of Stafford County,Port Authority of Stafford County transload facility,Economic Development Organization,2500000,Rail Improvements,Industrial Park,Yes
+32,Sumner,Wellington,Stomata Development LLC,Community 101 - Co-working and Event Center,,574875,Downtown building improvement,Multiuse space,Yes
+33,Washington,Linn,Washington County Economic Partnership,New Horizons Expansion,Economic Development Organization,207222,Unknown,Industrial Park,Yes
+34,Wyandotte,Kansas City,American Royal Association,New American Royal Complex,Non profit,3000000,Unknown,Venue,Yes
+35,Wyandotte,Kansas City,"HFS KCK, LLC",Homefield Wyandotte County,Private,3000000,Unknown,Multiuse Development,Yes
+,,,,,,,,,

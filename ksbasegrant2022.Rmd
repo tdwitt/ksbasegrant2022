@@ -1,0 +1,264 @@
+---
+title: "GEOG728 Final Project Slides"
+author: "Trevor D. Witt"
+date: "5/12/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Assignment {.tabset}
+
+### BASE Grant Background
+
+I serve on the Abilene city commission, and we recently applied for a BASE grant from the State of Kansas. The funding source from the program originated from one of the federal COVID-19 relief bills. We did not received funding, and at first look almost all the funding was in metropolitan areas. I will explore the fairness and distribution of these awards by mapping where these grants were approved. I will also run spatial regressions, looking at the correlation of funding to population and gross domestic product. You can find more information about the BASE Grant here:
+
+https://www.kansascommerce.gov/basegrant/
+
+### Packages 
+First up, let's load all the packages we'll need for this project. 
+
+```{r}
+library(sf)
+library(tidyverse)
+library(ggplot2)
+library(readxl)
+library(dplyr)
+library(PL94171)
+library(tmap)
+library(ggExtra)
+```
+
+
+### Source Data
+
+This project uses four sources of data. The first is the BASE grant award information. I made my own csv file based on the BASE grant website information. 
+
+```{r}
+base_data <- read.csv("BASE_Grant_KS_Data.csv")
+
+base_data <- base_data %>% #Narrow down to County and Award amount. 
+  select(County, Amount)
+
+base_data <- base_data[-36,] #Remove an empty last row
+
+base_totals <- aggregate(Amount ~ County, base_data, sum) #Sum by county
+```
+
+Now we will add our population data. I obtained this data off the census website. What is unique about this data is it is in the .pl format, which is really difficult to work with. This raw type of data is used for redistricting. Fortunately, there is a package built specifically to work with this data **PL94171**. Funny enough, the latest notes for this package were published May 10, 2022, so it is a new an updated package. 
+
+This next portion of code shows how to upload this data, and refine it down to where we only have the county name and the total population from 2020. 
+
+```{r}
+KS_pop <- pl_read("ks2020.pl")
+
+KS_pop <- pl_subset(KS_pop, sumlev = "050") #050 filters to county level
+
+head(KS_pop) #Data inspection
+tail(KS_pop)
+
+KS_pop[,"BASENAME"] 
+KS_pop[,"POP100"] #Filter to these two
+names(KS_pop)
+
+KS_pop <- KS_pop %>%
+  select(BASENAME, POP100)
+```
+
+Next we will add our GDP data, which comes from the Buraeu of Economic Analysis. We will perform similar operations to get us to just the County and GDP data for 2020. 
+
+```{r}
+KS_gdp <- read.csv("CAGDP1_KS_2001_2020.csv")
+
+colnames(KS_gdp)
+
+KS_gdp_2020 <- KS_gdp[-c(1:3),-c(1,3,4,6,9:27)] #Remove data I don't need
+
+KS_gdp_2020 <- filter(KS_gdp_2020, LineCode == 3)
+
+KS_gdp_2020 <- KS_gdp_2020[-c(2:4)]
+```
+
+Last, we need to load the shape file for the Kansas counties. 
+
+```{r}
+KS_counties <- st_read("KS_counties.shp")
+
+KS_counties <- KS_counties[-c(1:5,7:14)] #Reduce to data I need
+```
+
+
+### Consistent Data Format & Naming
+
+Now I need to make sure all the column names are the same so we can merge them together without issues. 
+
+```{r}
+#Shape file 
+names(KS_counties)[names(KS_counties) == "name"] <- "County"
+
+#GDP
+names(KS_gdp_2020)[names(KS_gdp_2020) == "GeoName"] <- "County"
+names(KS_gdp_2020)[names(KS_gdp_2020) == "X2020"] <- "GDP"
+
+KS_gdp_2020 <- KS_gdp_2020 %>% 
+  mutate_at("County", str_replace, ", KS", "") #Remove a suffix I don't need
+
+#Population
+names(KS_pop)[names(KS_pop) == "BASENAME"] <- "County"
+names(KS_pop)[names(KS_pop) == "POP100"] <- "Population"
+```
+
+We also need to make sure each data set is the same type, and let's inspect our work so far. 
+
+```{r}
+tibble::as_tibble(base_totals)
+tibble::as_tibble(KS_gdp_2020)
+tibble::as_tibble(KS_pop)
+```
+
+Looks good!
+
+### Merge Data
+
+Now I will merge all this data into one table to work with. 
+
+```{r}
+award_gdp <- dplyr::left_join(KS_gdp_2020, base_totals, by = "County")
+
+all_data <- dplyr::left_join(award_gdp, KS_pop, by = "County")
+```
+
+There are NAs for the counties that did not recieve grants, so let's changes those NA's to zeros. 
+
+```{r}
+all_data[is.na(all_data)] <- 0
+
+all_data #This has BASE award amount, GPD, and Population all by county and all by 2020 numbers.
+```
+
+### Bar Plots
+
+First, lets visualize this data using bar graphs. 
+
+```{r}
+all_data %>%
+  ggplot(.) +
+    geom_bar(aes(x = County, y = Amount), stat = "identity", fill = "#2b8cbe") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 90, vjust = -0.1)) +
+    ggtitle("BASE Grant Award Totals by County") + ylab("Amount in Dollars")
+
+all_data %>%
+  ggplot(.) +
+  geom_bar(aes(x = County, y = GDP), stat = "identity", fill = "#2b8cbe") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = -0.1)) +
+  ggtitle("2020 GDP by County") + ylab("GDP in Thousands of Dollars")
+
+all_data %>%
+  ggplot(.) +
+  geom_bar(aes(x = County, y = Population), stat = "identity", 
+           fill = "#2b8cbe") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = -0.1)) +
+  ggtitle("2020 Population by County") + ylab("Population")
+```
+
+The major outliers are pretty visible, but it's difficult to see exactly what all else is going on. 
+
+### Ggplot Maps
+
+Let's now plot out these values on a Kansas map of counties.
+
+First we need to join our data with the Kansas counties shape file. 
+
+```{r}
+mapped_data <- left_join(KS_counties, all_data, by = "County")
+
+head(mapped_data)
+```
+
+Now let's look at those maps. 
+
+```{r}
+ggplot() +
+  geom_sf(data = mapped_data, aes(fill = Amount))+
+  labs(fill = "Amount in Dollars") +
+  ggtitle("BASE Grant Award Totals by County")+
+  scale_fill_viridis_c(option="magma", begin=0.25)
+
+ggplot() +
+  geom_sf(data = mapped_data, aes(fill = GDP))+
+  labs(fill = "GDP in Thousands of Dollars") +
+  ggtitle("2020 GDP by County")+
+  scale_fill_viridis_c(option="magma", begin=0.25)
+
+ggplot() +
+  geom_sf(data = mapped_data, aes(fill = Population))+
+  ggtitle("2020 Population by County")+
+  scale_fill_viridis_c(option="magma", begin=0.25)
+```
+
+We are seeing some better detail on the differences now. However, it would be nice to "stack" some of this data on top of each other. 
+
+### Tmap Interactive
+
+By using the **tmap** package, we can better see these varaibles along side each other. Also, by using the view mode, we can more intuitively interact with these maps. 
+
+```{r}
+tmap_mode("view")
+
+tm_shape(mapped_data) +
+  tm_polygons("Amount") +
+  tm_bubbles("GDP", col="green")
+
+tm_shape(mapped_data) +
+  tm_polygons("Amount") +
+  tm_bubbles("Population", col="blue")
+```
+
+As a result, it does look like the award direction was pretty fair based on the populations and GDP of each county. If any county was shorted, it is likely Sedgwick not getting enough, but Butler county received an excess. 
+
+Butler County does border Sedgwick County, but I do find it interesting that Butler would receive an excess of BASE grant awards, given the Kansas Senate President represents Butler. 
+
+### Regression
+
+Now lets look at some regression based on the variables we are working with.
+
+```{r}
+base_pop <- ggplot(data = mapped_data, aes(x = mapped_data$Population, y = mapped_data$Amount)) +
+  geom_point() +
+  theme(legend.position = "none") +
+  xlab("Population") +
+  ylab("Award Amount in Dollars")
+
+ggMarginal(base_pop, type = "histogram")
+
+base_gdp <- ggplot(data = mapped_data, aes(x = mapped_data$GDP, y = mapped_data$Amount)) +
+  geom_point() +
+  theme(legend.position = "none") +
+  xlab("Population") +
+  ylab("GDP in Thousands of Dollars")
+
+ggMarginal(base_gdp, type = "histogram")
+```
+
+There is obviously some wide gaps here. I wish I could have mapped out more, but that's all the time I have. 
+
+This has been a great class! 
+
+### Sources 
+
+GDP
+https://apps.bea.gov/regional/downloadzip.cfm
+
+Census Data
+https://www.census.gov/programs-surveys/decennial-census/about/rdo/summary-files.html
+
+KS Counties
+File from class
+
+BASE Grants
+https://www.kansascommerce.gov/basegrant/
